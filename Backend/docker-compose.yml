@@ -1,0 +1,42 @@
+﻿version: '3.8'
+services:
+  backend:
+    build:
+      context: ..
+      dockerfile: ./Backend/Dockerfile
+    container_name: backend
+    restart: always
+    ports:
+      - "8080:8080"
+      - "80:80"
+    depends_on:
+      - postgres-database
+    env_file:
+      - .env
+    networks:
+      - mynetwork
+    
+
+  postgres-database:
+    hostname: postgres-database
+    image: postgres:14
+    container_name: postgres-database
+    restart: always
+    ports:
+      - "5432:5432"
+    env_file:
+      - .env
+    volumes:
+      - postgres-database:/var/lib/postgresql/data
+    networks: 
+      - mynetwork
+
+
+volumes:
+  postgres-database:
+    name: postgres-database-volume
+   
+networks:
+  mynetwork:
+    driver: bridge  
+  
