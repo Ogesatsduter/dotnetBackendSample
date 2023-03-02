@@ -10,11 +10,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Backend.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [ApiController]
     public class ExampleController : ControllerBase
     {
-        private AppDbContext _db;
+        private readonly AppDbContext _db;
         public ExampleController(AppDbContext dbContext)
         {
             _db = dbContext;
