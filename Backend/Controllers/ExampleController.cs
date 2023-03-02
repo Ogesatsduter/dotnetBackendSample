@@ -20,12 +20,18 @@ namespace Backend.Controllers
             _db = dbContext;
         }
         
+        /// <summary>
+        /// Get all examples.
+        /// </summary>
         [HttpGet]
         public async Task<IEnumerable<Example>> GetAll()
         {
             return await _db.Example.ToListAsync();
         }
-
+        
+        /// <summary>
+        /// Create an example.
+        /// </summary>
         [HttpPost(Name = "CreateAnExample")]
         public async Task<Example> CreateRandom()
         {
@@ -34,7 +40,7 @@ namespace Backend.Controllers
                 Name = "Cap",
                 Number = 187,
                 Date = DateTime.UtcNow,
-                Summary = "dezz nuzz",
+                Summary = "A short summary which, by the way, is actually really very short",
                 TemperatureC = 2023
             };
             _db.Example.Add(exampleToBeCreated);
