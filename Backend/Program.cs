@@ -1,4 +1,5 @@
 using Backend.Persistence;
+using Backend.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -12,6 +13,11 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql( "Host=postgres-database;Database=postgres;Port=5432;User Id=admin;Password=topsecret;"));
+
+builder.Services
+    .AddSingleton<IExampleService>();
+    //.AddSingleton();
+
 
 var app = builder.Build();
 
