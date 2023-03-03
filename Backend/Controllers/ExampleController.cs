@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Backend.Persistence;
 using Backend.Persistence.Models;
+using Backend.Services.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -14,10 +15,11 @@ namespace Backend.Controllers
     [ApiController]
     public class ExampleController : ControllerBase
     {
-        private readonly AppDbContext _db;
-        public ExampleController(AppDbContext dbContext)
+        
+        private readonly IExampleService _exampleService;
+        public ExampleController(IExampleService exampleService)
         {
-            _db = dbContext;
+            _exampleService = exampleService;
         }
         
         /// <summary>
@@ -26,7 +28,7 @@ namespace Backend.Controllers
         [HttpGet]
         public async Task<IEnumerable<Example>> GetAll()
         {
-            return await _db.Example.ToListAsync();
+            return await _exampleService.GetAllExamples(); 
         }
         
         /// <summary>
@@ -35,17 +37,7 @@ namespace Backend.Controllers
         [HttpPost(Name = "CreateAnExample")]
         public async Task<Example> CreateRandom()
         {
-            Example exampleToBeCreated = new Example()
-            {
-                Name = "Cap",
-                Number = 187,
-                Date = DateTime.UtcNow,
-                Summary = "A short summary which, by the way, is actually really very short",
-                TemperatureC = 2023
-            };
-            _db.Example.Add(exampleToBeCreated);
-            await _db.SaveChangesAsync();
-            return exampleToBeCreated;
+            return await _exampleService.CreateExample();
         }
         
     }
