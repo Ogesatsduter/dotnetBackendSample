@@ -34,7 +34,9 @@ public class ServiceResponse<T>
 
     public ServiceResponse<UserResponseDto> ToUserResponseDto(string? jwt = "")
     {
+        // TODO: userPayload is null, why?
         User userPayload = Payload as User;
+        
         Console.WriteLine(userPayload.Id);
         if (userPayload == null) throw new InvalidCastException("cannot cast " + typeof(T) + " to " + typeof(UserResponseDto));
 

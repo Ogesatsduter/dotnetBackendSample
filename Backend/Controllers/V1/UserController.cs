@@ -116,6 +116,7 @@ public class UserController : ControllerBase
             return Unauthorized(_responseMessages.NotLoggedIn);
 
         ServiceResponse<User> serviceResponse = await _userService.TerminateAccount(userRequestDto, jwtToken);
-        return serviceResponse.ToUserResponseDto().ToObjectResult();
+        
+        return serviceResponse.Success ? serviceResponse.ToUserResponseDto().ToObjectResult() : serviceResponse.ToObjectResult();
     }
 }
