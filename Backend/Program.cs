@@ -44,7 +44,6 @@ using (var serviceScope =
 }
 
 
-app.UseHttpsRedirection();
 
 app.UseAuthorization();
 

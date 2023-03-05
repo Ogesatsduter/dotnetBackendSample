@@ -40,6 +40,7 @@ public class UserService : IUserService
 
         User newUser = new()
         {
+            Username = userRequest.Username,
             Salt = _security.GenerateSalt()
         };
 

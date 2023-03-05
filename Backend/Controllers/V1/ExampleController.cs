@@ -1,18 +1,19 @@
 using AutoMapper;
 using Backend.DTOs;
+using Backend.Services;
 using Backend.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Backend.Controllers.V1;
 
-[Route("api/v{version:apiVersion}/[controller]")]
+[Route("api/v1/[controller]")]
 [ApiController]
 public class ExampleController : ControllerBase
 {
-    private readonly IExampleService _exampleService;
+    private readonly ExampleService _exampleService;
     private readonly IMapper _mapper;
 
-    public ExampleController(IExampleService exampleService, IMapper mapper)
+    public ExampleController(ExampleService exampleService, IMapper mapper)
     {
         _exampleService = exampleService;
         _mapper = mapper;

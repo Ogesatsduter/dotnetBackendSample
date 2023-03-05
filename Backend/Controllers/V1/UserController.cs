@@ -1,5 +1,8 @@
 using AutoMapper;
 using Backend.DTOs.UserDto;
+using Backend.Persistence.Entities;
+using Backend.Services;
+using Backend.Services.Helpers;
 using Backend.Services.Helpers.Interfaces;
 using Backend.Services.Interfaces;
 using Backend.Settings;
@@ -9,22 +12,21 @@ using Microsoft.Extensions.Options;
 
 namespace Backend.Controllers.V1;
 
-[Route("api/v{version:apiVersion}/[controller]")]
+[Route("api/v1/[controller]")]
 [ApiController]
-[EnableCors]
 public class UserController : ControllerBase
 {
-    private readonly IJwtService _jwtService;
+    private readonly JwtService _jwtService;
 
     private readonly IMapper _mapper;
 
     private readonly ResponseSettings _responseMessages;
 
-    private readonly ISecurityService _security;
+    private readonly SecurityService _security;
 
-    private readonly IUserService _userService;
+    private readonly UserService _userService;
 
-    public UserController(IUserService userService, IMapper mapper, IJwtService jwtService, ISecurityService security,
+    public UserController(UserService userService, IMapper mapper, JwtService jwtService, SecurityService security,
         IOptions<ResponseSettings> responseMessages)
     {
         _userService = userService;
@@ -113,7 +115,7 @@ public class UserController : ControllerBase
         if (!_security.CheckPassword(userRequestDto.Password, userResponse.Payload.Salt, userResponse.Payload.Password))
             return Unauthorized(_responseMessages.NotLoggedIn);
 
-        var serviceResponse = await _userService.TerminateAccount(userRequestDto, jwtToken);
+        ServiceResponse<User> serviceResponse = await _userService.TerminateAccount(userRequestDto, jwtToken);
         return serviceResponse.ToUserResponseDto().ToObjectResult();
     }
 }
