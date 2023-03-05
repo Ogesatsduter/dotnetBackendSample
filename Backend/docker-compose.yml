@@ -14,8 +14,8 @@ services:
       - .env
     networks:
       - mynetwork
-    
-
+  
+  
   postgres-database:
     hostname: postgres-database
     image: postgres:14
@@ -27,14 +27,14 @@ services:
       - .env
     volumes:
       - postgres-database:/var/lib/postgresql/data
-    networks: 
+    networks:
       - mynetwork
 
 
 volumes:
   postgres-database:
     name: postgres-database-volume
-   
+
 networks:
   mynetwork:
     driver: bridge  

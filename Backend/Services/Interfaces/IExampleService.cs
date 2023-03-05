@@ -1,4 +1,4 @@
-﻿using Backend.Persistence.Models;
+﻿using Backend.Persistence.Entities;
 
 namespace Backend.Services.Interfaces;
 

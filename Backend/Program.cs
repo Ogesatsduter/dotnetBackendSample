@@ -1,5 +1,7 @@
 using Backend.Persistence;
-using Backend.Services.Interfaces;
+using Backend.Services;
+using Backend.Services.Helpers;
+using Backend.Settings;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -12,11 +14,16 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseNpgsql( "Host=postgres-database;Database=postgres;Port=5432;User Id=admin;Password=topsecret;"));
+    options.UseNpgsql("Host=postgres-database;Database=postgres;Port=5432;User Id=admin;Password=topsecret;"));
+
 
 builder.Services
-    .AddSingleton<IExampleService>();
-    //.AddSingleton();
+    .AddScoped<UserService>()
+    .AddScoped<ExampleService>()
+    .AddSingleton<SecurityService>()
+    .AddSingleton<JwtService>()
+    .AddAutoMapper(typeof(AutomapperProfile))
+    .Configure<ResponseSettings>(builder.Configuration.GetSection(nameof(ResponseSettings)));
 
 
 var app = builder.Build();
@@ -29,7 +36,8 @@ if (app.Environment.IsDevelopment())
 }
 
 // automatically creates the database and the tables
-using (var serviceScope = ((IApplicationBuilder)app).ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
+using (var serviceScope =
+       ((IApplicationBuilder)app).ApplicationServices.GetService<IServiceScopeFactory>()?.CreateScope())
 {
     var context = serviceScope.ServiceProvider.GetRequiredService<AppDbContext>();
     context.Database.Migrate();

@@ -1,5 +1,5 @@
 ﻿using Backend.Persistence;
-using Backend.Persistence.Models;
+using Backend.Persistence.Entities;
 using Backend.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
@@ -8,6 +8,7 @@ namespace Backend.Services;
 public class ExampleService : IExampleService
 {
     private readonly AppDbContext _db;
+
     public ExampleService(AppDbContext dbContext)
     {
         _db = dbContext;
@@ -20,7 +21,7 @@ public class ExampleService : IExampleService
 
     public async Task<Example> CreateExample()
     {
-        Example exampleToBeCreated = new Example()
+        var exampleToBeCreated = new Example
         {
             Name = "Cap",
             Number = 187,
