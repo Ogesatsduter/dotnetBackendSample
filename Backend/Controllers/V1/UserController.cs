@@ -104,7 +104,7 @@ public class UserController : ControllerBase
         var username = _jwtService.ValidateToken(jwtToken);
         var usernameExists = await _userService.UsernameExists(username.Payload);
 
-        if (!usernameExists.Payload) return usernameExists.ToObjectResult();
+        if (!usernameExists.Payload) return NotFound(_responseMessages.UserDoesNotExist);
         if (!username.Success || username.PayloadIsNull()) return Unauthorized(_responseMessages.NotLoggedIn);
         if (userRequestDto.Username != username.Payload)
             return Forbid(_responseMessages.CannotTerminateAccountOfOtherUser);

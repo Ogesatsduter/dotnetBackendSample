@@ -20,7 +20,6 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 builder.Services
     .AddScoped<UserService>()
-    .AddScoped<ExampleService>()
     .AddSingleton<SecurityService>()
     .AddSingleton<JwtService>()
     .AddAutoMapper(typeof(AutomapperProfile))
@@ -41,7 +40,14 @@ using (var serviceScope =
        ((IApplicationBuilder)app).ApplicationServices.GetService<IServiceScopeFactory>()?.CreateScope())
 {
     var context = serviceScope.ServiceProvider.GetRequiredService<AppDbContext>();
-    context.Database.Migrate();
+    try
+    {
+        context.Database.Migrate();
+    }
+    catch (Npgsql.PostgresException)
+    {
+        // Ignore, Database Already exists
+    }
 }
 
 

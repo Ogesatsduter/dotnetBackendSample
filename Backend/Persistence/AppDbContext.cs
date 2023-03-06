@@ -9,6 +9,5 @@ public class AppDbContext : DbContext
     {
     }
 
-    public DbSet<Example> Example { get; set; }
     public DbSet<User> Users { get; set; }
 }
