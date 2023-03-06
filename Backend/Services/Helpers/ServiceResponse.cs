@@ -35,18 +35,17 @@ public class ServiceResponse<T>
     public ServiceResponse<UserResponseDto> ToUserResponseDto(string? jwt = "")
     {
         // TODO: userPayload is null, why?
-        User userPayload = Payload as User;
-        
-        Console.WriteLine(userPayload.Id);
-        if (userPayload == null) throw new InvalidCastException("cannot cast " + typeof(T) + " to " + typeof(UserResponseDto));
 
-        UserResponseDto URDto = new()
+        if (Payload is not User userPayload)
+            throw new InvalidCastException("cannot cast " + typeof(T) + " to " + typeof(UserResponseDto));
+
+        UserResponseDto userResponseDto = new()
         {
             Id = userPayload.Id,
             Jwt = jwt,
             Username = userPayload.Username,
             CreatedAt = userPayload.CreatedAt
         };
-        return new ServiceResponse<UserResponseDto>(URDto, true, StatusCodes.Status200OK);
+        return new ServiceResponse<UserResponseDto>(userResponseDto, true, StatusCodes.Status200OK);
     }
 }

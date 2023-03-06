@@ -1,12 +1,8 @@
 using AutoMapper;
 using Backend.DTOs.UserDto;
-using Backend.Persistence.Entities;
 using Backend.Services;
-using Backend.Services.Helpers;
-using Backend.Services.Helpers.Interfaces;
-using Backend.Services.Interfaces;
+using Backend.Services.Helpers.Auth;
 using Backend.Settings;
-using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 
@@ -85,8 +81,11 @@ public class UserController : ControllerBase
         var usernameExists = await _userService.UsernameExists(userRequestDto.Username);
         if (!usernameExists.Payload) return Unauthorized(_responseMessages.UserDoesNotExist);
 
-        var serviceResponse = await _userService.Login(userRequestDto);
-        return serviceResponse.ToObjectResult();
+        var jwt = await _userService.Login(userRequestDto);
+        var user = await _userService.GetUserByUsername(userRequestDto.Username);
+        var userResponse = user.ToUserResponseDto();
+        userResponse.Payload.Jwt = jwt.Payload;
+        return userResponse.ToObjectResult();
     }
 
     /// <summary>
@@ -115,8 +114,10 @@ public class UserController : ControllerBase
         if (!_security.CheckPassword(userRequestDto.Password, userResponse.Payload.Salt, userResponse.Payload.Password))
             return Unauthorized(_responseMessages.NotLoggedIn);
 
-        ServiceResponse<User> serviceResponse = await _userService.TerminateAccount(userRequestDto, jwtToken);
-        
-        return serviceResponse.Success ? serviceResponse.ToUserResponseDto().ToObjectResult() : serviceResponse.ToObjectResult();
+        var serviceResponse = await _userService.TerminateAccount(userRequestDto, jwtToken);
+
+        return serviceResponse.Success
+            ? serviceResponse.ToUserResponseDto().ToObjectResult()
+            : serviceResponse.ToObjectResult();
     }
 }

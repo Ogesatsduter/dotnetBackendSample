@@ -1,6 +1,6 @@
 ﻿using Backend.Persistence.Entities;
 
-namespace Backend.Services.Helpers.Interfaces;
+namespace Backend.Services.Helpers.Auth.Interfaces;
 
 public interface ISecurityService
 {

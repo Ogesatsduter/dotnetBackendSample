@@ -1,12 +1,12 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using Backend.Services.Helpers.Interfaces;
+using Backend.Services.Helpers.Auth.Interfaces;
 using Backend.Settings;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
-namespace Backend.Services.Helpers;
+namespace Backend.Services.Helpers.Auth;
 
 public class JwtService : IJwtService
 {
@@ -31,7 +31,7 @@ public class JwtService : IJwtService
     {
         var authClaims = new List<Claim>
         {
-            new(_config["JWT:subject"], username)
+            new(_config["JWT:subject"] ?? "sub", username)
         };
         if (claims != null) authClaims.AddRange(claims);
         var jwtToken = new JwtSecurityTokenHandler().WriteToken(CreateToken(authClaims));
@@ -54,7 +54,7 @@ public class JwtService : IJwtService
                 new TokenValidationParameters
                 {
                     ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["JWT:secret"])),
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["JWT:secret"] ?? "sub")),
                     ValidateIssuer = false,
                     ValidateAudience = false,
                     ClockSkew = TimeSpan.Zero
@@ -80,7 +80,7 @@ public class JwtService : IJwtService
     /// </returns>
     public JwtSecurityToken CreateToken(List<Claim> authClaims)
     {
-        var signedKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["JWT:secret"]));
+        var signedKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["JWT:secret"] ?? "sub"));
         var generatedToken = new JwtSecurityToken(
             _config["JWT:issuer"],
             expires: DateTime.Now.AddHours(24), // remove hardcoded expire date

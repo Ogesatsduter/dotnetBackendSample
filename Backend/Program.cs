@@ -1,6 +1,7 @@
 using Backend.Persistence;
 using Backend.Services;
 using Backend.Services.Helpers;
+using Backend.Services.Helpers.Auth;
 using Backend.Settings;
 using Microsoft.EntityFrameworkCore;
 
@@ -42,7 +43,6 @@ using (var serviceScope =
     var context = serviceScope.ServiceProvider.GetRequiredService<AppDbContext>();
     context.Database.Migrate();
 }
-
 
 
 app.UseAuthorization();

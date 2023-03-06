@@ -1,7 +1,7 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 
-namespace Backend.Services.Helpers.Interfaces;
+namespace Backend.Services.Helpers.Auth.Interfaces;
 
 public interface IJwtService
 {

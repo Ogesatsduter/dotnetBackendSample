@@ -1,7 +1,6 @@
 using AutoMapper;
 using Backend.DTOs;
 using Backend.Services;
-using Backend.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Backend.Controllers.V1;

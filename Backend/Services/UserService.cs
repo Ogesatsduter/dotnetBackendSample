@@ -2,6 +2,7 @@ using Backend.DTOs.UserDto;
 using Backend.Persistence;
 using Backend.Persistence.Entities;
 using Backend.Services.Helpers;
+using Backend.Services.Helpers.Auth;
 using Backend.Services.Interfaces;
 using Backend.Settings;
 using Microsoft.EntityFrameworkCore;
@@ -63,7 +64,7 @@ public class UserService : IUserService
             var user = await _db.Users.AsNoTracking().FirstOrDefaultAsync(x => x.Username == username);
             return new ServiceResponse<User>(user, true, StatusCodes.Status200OK);
         }
-        catch (Exception e)
+        catch (Exception)
         {
             return new ServiceResponse<User>(null, false, StatusCodes.Status404NotFound,
                 _responseMessages.UserNotFound);
